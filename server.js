@@ -115,31 +115,55 @@ const addRole = () => {
   //In this, I am prompted to enter the name, salary, and department for the role and that role is added to the database
   const query = "SELECT * FROM department";
   connection.query(query, function (error, res) {
+    var deptChose = [];
+    var deptChoseID = [];
+
     if (error) throw error;
-    inquirer.prompt([
-      {
-        name: "title",
-        type: "input",
-        message: "title of new role?",
-      },
-      {
-        name: "salary",
-        type: "input",
-        message: "salary of new role?",
-      },
-      {
-        name: "dept",
-        type: "list",
-        message: "department of new role?",
-        choices: function () {
-          var choicesArray = [];
-          res.forEach((res) => {
-            choicesArray.push(res.name);
-          });
-          return choicesArray;
+    inquirer
+      .prompt([
+        {
+          name: "title",
+          type: "input",
+          message: "title of new role?",
         },
-      },
-    ]);
+        {
+          name: "salary",
+          type: "input",
+          message: "salary of new role?",
+        },
+        {
+          name: "dept",
+          type: "list",
+          message: "department of new role?",
+          choices: function () {
+            res.forEach((res) => {
+              deptChose.push(res.name);
+              deptChoseID.push(res.id);
+            });
+            return deptChoseID, deptChose;
+          },
+        },
+      ])
+      .then((answer) => {
+        var query1 = "SELECT id FROM department where  name = (?)";
+        let dept1 = [answer.dept];
+        let id1;
+
+        connection.query(query1, dept1, function (error, response) {
+          if (error) throw error;
+          id1 = response.id;
+        });
+
+        var query =
+          "INSERT INTO role (title, salary, department_id) VALUES ( ?, ? , ? )";
+        let crit = [answer.title, answer.salary, id1];
+
+        connection.query(query, crit, function (error, response) {
+          if (error) throw error;
+          console.log(`role: ${answer.title} is added.`);
+        });
+        viewDepartments();
+      });
   });
 };
 
