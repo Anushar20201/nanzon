@@ -38,21 +38,57 @@ const askQuestions = () => {
   inquirer.prompt(questions).then((answers) => {
     const { choices } = answers;
     if (choices === "view all departments") {
+        viewDepartments();
     }
     if (choices === "view all roles") {
+        viewRoles();
     }
     if (choices === "view all employees") {
+        viewEmployees();
     }
     if (choices === "add a department") {
+        addDepartment();
     }
     if (choices === "add a role") {
+        addRole();
     }
     if (choices === "add an employee") {
+        addEmployee();
     }
     if (choices === "update an employee role") {
+        updateEmployee();
     }
     if (choices === "None") {
       connection.end();
     }
   });
 };
+
+
+const viewDepartments = () => {
+
+}
+
+const viewRoles = () => {
+
+}
+
+const viewEmployees = () => {
+
+}
+
+const addDepartment = () => {
+
+}
+
+const addRole = () => {
+
+}
+
+const addEmployee = () => {
+
+}
+
+const updateEmployee = () => {
+
+}
