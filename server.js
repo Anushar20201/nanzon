@@ -166,7 +166,6 @@ const addRole = () => {
             console.log(`role: ${answer.title} is added.`);
           });
           viewRoles();
-
         });
       });
   });
@@ -174,6 +173,75 @@ const addRole = () => {
 
 const addEmployee = () => {
   //In this, I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+  inquirer.prompt([
+      {
+        type: "input",
+        name: "fistName",
+        message: "Enter employee's first name?"
+      },
+      {
+        type: "input",
+        name: "lastName",
+        message: "Enter employee's last name?"
+      },
+    ])
+    .then((answer) => {
+      const params = [answer.fistName, answer.lastName];
+      const query1 = "SELECT role.id, role.title FROM role";
+      const query2 = "SELECT * FROM employee";
+
+
+      connection.query(query1, (err, data) => {
+        if (err) throw err;
+
+        const rolesOptions = data.map(({ id, title }) => ({ name: title, value: id }));
+
+        inquirer.prompt([
+            {
+              type: "list",
+              name: "role",
+              message: "Choose employee's role?",
+              choices: rolesOptions,
+            },
+          ])
+          .then((answer) => {
+            const role = answer.role;
+            params.push(role);
+
+
+            connection.query(query2, (err, data) => {
+              if (err) throw err;
+
+              const managersData = data.map(({ id, first_name, last_name }) => ({
+                name: first_name + ' ' + last_name,
+                value: id,
+              }));
+
+
+              inquirer.prompt([
+                  {
+                    type: "list",
+                    name: "manager",
+                    message: "Choose employee's manager?",
+                    choices: managersData,
+                  },
+                ])
+                .then((managerChoice) => {
+                  const manager = managerChoice.manager;
+                  params.push(manager);
+
+                  const sql = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
+
+                  connection.query(sql, params, (err, result) => {
+                    if (err) throw err;
+                    console.log( "Employee is added sucessfully");
+                    viewEmployees();
+                  });
+                });
+            });
+          });
+      });
+    });
 };
 
 const updateEmployee = () => {
