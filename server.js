@@ -65,35 +65,49 @@ const askQuestions = () => {
 const viewDepartments = () => {
   //In this, I am presented with a formatted table showing department names and department ids
   const query = "SELECT * FROM department";
-  connection.query(query, function(error, response) {
-      if (error) throw error;
-      console.table(response);
+  connection.query(query, function (error, response) {
+    if (error) throw error;
+    console.table(response);
     askQuestions();
-    });
+  });
 };
 
 const viewRoles = () => {
   //In this, I am presented with the job title, role id, the department that role belongs to, and the salary for that role
   const query = "SELECT * FROM role";
-  connection.query(query, function(error, response) {
-      if (error) throw error;
-      console.table(response);
+  connection.query(query, function (error, response) {
+    if (error) throw error;
+    console.table(response);
     askQuestions();
-    });
+  });
 };
 
 const viewEmployees = () => {
   //In this, I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
-  const query = "select employee.id, employee.first_name, employee.last_name, role.title as title, department.name as department, role.salary as salary, employee. manager_id as managerID from employee LEFT join role on role.id= employee.role_id LEFT join department on department.id = role.department_id ";
-  connection.query(query, function(error, response) {
-      if (error) throw error;
-      console.table(response);
+  const query =
+    "select employee.id, employee.first_name, employee.last_name, role.title as title, department.name as department, role.salary as salary, employee. manager_id as managerID from employee LEFT join role on role.id= employee.role_id LEFT join department on department.id = role.department_id ";
+  connection.query(query, function (error, response) {
+    if (error) throw error;
+    console.table(response);
     askQuestions();
-    });
+  });
 };
 
 const addDepartment = () => {
   //In this, I am prompted to enter the name of the department and that department is added to the database
+  inquirer.prompt({
+      name: "department",
+      type: "input",
+      message: "Please enter the name of new department",
+    })
+    .then(function (answer) {
+      var query = "INSERT INTO department (name) VALUES ( ? )";
+      connection.query(query, answer.department, function (error, response) {
+        if (error) throw error;
+        console.log(`department: ${(answer.department)} is added.`)
+      });
+      viewDepartments();
+    });
 };
 
 const addRole = () => {
