@@ -95,7 +95,8 @@ const viewEmployees = () => {
 
 const addDepartment = () => {
   //In this, I am prompted to enter the name of the department and that department is added to the database
-  inquirer.prompt({
+  inquirer
+    .prompt({
       name: "department",
       type: "input",
       message: "Please enter the name of new department",
@@ -104,7 +105,7 @@ const addDepartment = () => {
       var query = "INSERT INTO department (name) VALUES ( ? )";
       connection.query(query, answer.department, function (error, response) {
         if (error) throw error;
-        console.log(`department: ${(answer.department)} is added.`)
+        console.log(`department: ${answer.department} is added.`);
       });
       viewDepartments();
     });
@@ -112,6 +113,34 @@ const addDepartment = () => {
 
 const addRole = () => {
   //In this, I am prompted to enter the name, salary, and department for the role and that role is added to the database
+  const query = "SELECT * FROM department";
+  connection.query(query, function (error, res) {
+    if (error) throw error;
+    inquirer.prompt([
+      {
+        name: "title",
+        type: "input",
+        message: "title of new role?",
+      },
+      {
+        name: "salary",
+        type: "input",
+        message: "salary of new role?",
+      },
+      {
+        name: "dept",
+        type: "list",
+        message: "department of new role?",
+        choices: function () {
+          var choicesArray = [];
+          res.forEach((res) => {
+            choicesArray.push(res.name);
+          });
+          return choicesArray;
+        },
+      },
+    ]);
+  });
 };
 
 const addEmployee = () => {
