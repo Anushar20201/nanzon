@@ -1,6 +1,4 @@
-const db = require("./db/connection");
-// import mysql2
-const mysql = require("mysql2");
+const connection = require("./db/connection");
 // import inquirer
 const inquirer = require("inquirer");
 // import console.table for console level logging
@@ -23,7 +21,7 @@ const questions = [
   },
 ];
 
-db.connect((err) => {
+connection.connect((err) => {
   if (err) {
     console.log(err);
   } else {
@@ -38,25 +36,25 @@ const askQuestions = () => {
   inquirer.prompt(questions).then((answers) => {
     const { choices } = answers;
     if (choices === "view all departments") {
-        viewDepartments();
+      viewDepartments();
     }
     if (choices === "view all roles") {
-        viewRoles();
+      viewRoles();
     }
     if (choices === "view all employees") {
-        viewEmployees();
+      viewEmployees();
     }
     if (choices === "add a department") {
-        addDepartment();
+      addDepartment();
     }
     if (choices === "add a role") {
-        addRole();
+      addRole();
     }
     if (choices === "add an employee") {
-        addEmployee();
+      addEmployee();
     }
     if (choices === "update an employee role") {
-        updateEmployee();
+      updateEmployee();
     }
     if (choices === "None") {
       connection.end();
@@ -64,31 +62,36 @@ const askQuestions = () => {
   });
 };
 
-
 const viewDepartments = () => {
-
-}
+  //In this, I am presented with a formatted table showing department names and department ids
+  const query = "SELECT * FROM department";
+  connection.query(query, function(error, response) {
+      if (error) throw error;
+      console.table(response);
+    askQuestions();
+    });
+};
 
 const viewRoles = () => {
-
-}
+  //In this, I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+};
 
 const viewEmployees = () => {
-
-}
+  //In this, I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+};
 
 const addDepartment = () => {
-
-}
+  //In this, I am prompted to enter the name of the department and that department is added to the database
+};
 
 const addRole = () => {
-
-}
+  //In this, I am prompted to enter the name, salary, and department for the role and that role is added to the database
+};
 
 const addEmployee = () => {
-
-}
+  //In this, I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+};
 
 const updateEmployee = () => {
-
-}
+  //In this, I am prompted to select an employee to update and their new role and this information is updated in the database
+};
