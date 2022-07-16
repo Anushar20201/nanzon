@@ -117,6 +117,7 @@ const addRole = () => {
   connection.query(query, function (error, res) {
     var deptChose = [];
     var deptChoseID = [];
+    var id1;
 
     if (error) throw error;
     inquirer
@@ -140,29 +141,33 @@ const addRole = () => {
               deptChose.push(res.name);
               deptChoseID.push(res.id);
             });
-            return deptChoseID, deptChose;
+            return deptChose;
           },
         },
       ])
       .then((answer) => {
+        console.log(answer);
+        console.log(answer.dept);
+
         var query1 = "SELECT id FROM department where  name = (?)";
         let dept1 = [answer.dept];
-        let id1;
 
         connection.query(query1, dept1, function (error, response) {
-          if (error) throw error;
-          id1 = response.id;
-        });
+          console.log(response[0].id);
 
-        var query =
-          "INSERT INTO role (title, salary, department_id) VALUES ( ?, ? , ? )";
-        let crit = [answer.title, answer.salary, id1];
-
-        connection.query(query, crit, function (error, response) {
           if (error) throw error;
-          console.log(`role: ${answer.title} is added.`);
+          id1 = response[0].id;
+          var query =
+            "INSERT INTO role (title, salary, department_id) VALUES ( ?, ? , ? )";
+          let crit = [answer.title, answer.salary, id1];
+
+          connection.query(query, crit, function (error, response) {
+            if (error) throw error;
+            console.log(`role: ${answer.title} is added.`);
+          });
+          viewRoles();
+
         });
-        viewDepartments();
       });
   });
 };
