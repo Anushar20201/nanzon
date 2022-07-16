@@ -74,10 +74,22 @@ const viewDepartments = () => {
 
 const viewRoles = () => {
   //In this, I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+  const query = "SELECT * FROM role";
+  connection.query(query, function(error, response) {
+      if (error) throw error;
+      console.table(response);
+    askQuestions();
+    });
 };
 
 const viewEmployees = () => {
   //In this, I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+  const query = "select employee.id, employee.first_name, employee.last_name, role.title as title, department.name as department, role.salary as salary, employee. manager_id as managerID from employee LEFT join role on role.id= employee.role_id LEFT join department on department.id = role.department_id ";
+  connection.query(query, function(error, response) {
+      if (error) throw error;
+      console.table(response);
+    askQuestions();
+    });
 };
 
 const addDepartment = () => {
