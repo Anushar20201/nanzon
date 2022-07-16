@@ -1,18 +1,21 @@
 {
   "name": "nanzon",
   "version": "1.0.0",
-  "description": "Back-end APIs for a nanzon app.",
+  "description": "Employee management application of Nanzon organization where you can manage the employee database from command line",
   "main": "server.js",
   "dependencies": {
     "express": "^4.17.1",
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "inquirer": "^7.1.0",
+    "console.table": "^0.10.0"
+
   },
   "scripts": {
     "test": "jest",
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Anusha",
   "license": "ISC",
   "devDependencies": {
     "jest": "^26.6.3"
