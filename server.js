@@ -1,8 +1,11 @@
+// import db connection
 const connection = require("./db/connection");
 // import inquirer
 const inquirer = require("inquirer");
 // import console.table for console level logging
 const logging = require("console.table");
+
+//questions box for the user
 const questions = [
   {
     type: "list",
@@ -16,11 +19,13 @@ const questions = [
       "add a role",
       "add an employee",
       "update an employee role",
+      "view budget",
       "None",
     ],
   },
 ];
 
+//Start of the app
 connection.connect((err) => {
   if (err) {
     console.log(err);
@@ -32,6 +37,7 @@ connection.connect((err) => {
   }
 });
 
+//invoking corresponding function based on options
 const askQuestions = () => {
   inquirer.prompt(questions).then((answers) => {
     const { choices } = answers;
@@ -314,10 +320,11 @@ const updateEmployee = () => {
 };
 
 const viewBudget = () => {
-  const sql = `SELECT department_id AS DepartmentId, department.name AS DepartmentName, SUM(salary) AS budget FROM  role  
+  // This allows the user to view the total utilized budget of a department—in other words, the combined salaries of all employees in that department
+  const budgetQuery = `SELECT department_id AS DepartmentId, department.name AS DepartmentName, SUM(salary) AS budget FROM  role  
               FULL JOIN department ON role.department_id = department.id GROUP BY  department_id`;
 
-  connection.query(sql, (err, rows) => {
+  connection.query(budgetQuery, (err, rows) => {
     if (err) throw err;
     console.log(
       "******************Budget of this company is***********************"
