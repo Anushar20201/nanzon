@@ -56,6 +56,9 @@ const askQuestions = () => {
     if (choices === "update an employee role") {
       updateEmployee();
     }
+    if (choices === "View budget") {
+      viewBudget();
+    }
     if (choices === "None") {
       connection.end();
     }
@@ -307,5 +310,19 @@ const updateEmployee = () => {
             });
         });
       });
+  });
+};
+
+const viewBudget = () => {
+  const sql = `SELECT department_id AS DepartmentId, department.name AS DepartmentName, SUM(salary) AS budget FROM  role  
+              FULL JOIN department ON role.department_id = department.id GROUP BY  department_id`;
+
+  connection.query(sql, (err, rows) => {
+    if (err) throw err;
+    console.log(
+      "******************Budget of this company is***********************"
+    );
+    console.table(rows);
+    askQuestions();
   });
 };
