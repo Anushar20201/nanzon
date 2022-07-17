@@ -62,7 +62,7 @@ const askQuestions = () => {
     if (choices === "update an employee role") {
       updateEmployee();
     }
-    if (choices === "View budget") {
+    if (choices === "view budget") {
       viewBudget();
     }
     if (choices === "None") {
@@ -321,8 +321,8 @@ const updateEmployee = () => {
 
 const viewBudget = () => {
   // This allows the user to view the total utilized budget of a department—in other words, the combined salaries of all employees in that department
-  const budgetQuery = `SELECT department_id AS DepartmentId, department.name AS DepartmentName, SUM(salary) AS budget FROM  role  
-              FULL JOIN department ON role.department_id = department.id GROUP BY  department_id`;
+  const budgetQuery = `SELECT department.id AS DepartmentId, department.name AS DepartmentName, SUM(role.salary) AS budget FROM  role  
+               JOIN department ON role.department_id = department.id GROUP BY  department.id`;
 
   connection.query(budgetQuery, (err, rows) => {
     if (err) throw err;
